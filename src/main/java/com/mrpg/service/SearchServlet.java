@@ -40,7 +40,8 @@ public class SearchServlet extends HttpServlet {
             //out.println("Ok");
             System.out.println("Search called");
             //String data = "[\"upper_25\",\"upper_50\",\"upper_75\",\"upper_90\",\"upper_95\"]";
-            String data = "[\"ReceivingViolationsNextDay\",\"ASNOutViolations\"]";
+            //String data = "[\"ReceivingViolationsNextDay\",\"ASNOutViolations\"]";
+            String data = Util.getProperties("default").getProperty("search.patterns");
             out.print(data);
             out.flush();
         }

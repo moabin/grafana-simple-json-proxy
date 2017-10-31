@@ -5,12 +5,14 @@
  */
 package com.mrpg.service;
 
+import com.mrpg.service.bean.JsonBuilder;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.logging.Level;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -53,50 +55,18 @@ public class QueryServlet extends HttpServlet {
             JsonObject requestJson = Json.createReader(request.getInputStream()).readObject();
             JsonArray targets = requestJson.getJsonArray("targets");
             String target = targets.getJsonObject(0).getString("target");
-            
+
             LOG.debug("target = " + target);
-            HashMap headers = new HashMap();
-            headers.put("Accept", "application/json");
 
-            JsonObject jsonReponse = Json.createReader(Util.doGetStream(Util.getProperties("default").getProperty(target + ".URL"), headers)).readObject();
+            try {
+                Class targetClass = Class.forName("com.mrpg.service.bean" + target);
+                JsonBuilder builder = (JsonBuilder) targetClass.newInstance();
 
-            ClassLoader loader = Thread.currentThread().getContextClassLoader();
-            InputStream is = loader.getResourceAsStream(Util.getProperties("default").getProperty("columns.json"));
-            JsonArray columnsToMatch = Json.createReader(is).readArray();
-            //System.out.println(columnsToMatch);
-
-            JsonArray entries = jsonReponse.getJsonObject("entries").getJsonArray("entry");
-            Iterator<JsonValue> it = entries.iterator();
-
-            JsonArrayBuilder rowBuilder = Json.createArrayBuilder();
-            while (it.hasNext()) {
-                JsonValue value = it.next();
-                JsonObject v = (JsonObject) value;
-                JsonArrayBuilder row = Json.createArrayBuilder();
-
-                Iterator<JsonValue> colIt = columnsToMatch.iterator();
-                while (colIt.hasNext()) {
-                    JsonObject colDef = (JsonObject) colIt.next();
-                    row.add(v.get(colDef.getString("text")));
-                }
-
-                rowBuilder.add(row.build());
+                out.print(builder.build());
+                out.flush();
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
+                java.util.logging.Logger.getLogger(QueryServlet.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
             }
-
-            JsonArrayBuilder baseArray = Json.createArrayBuilder();
-            JsonArrayBuilder columnsArrays = Json.createArrayBuilder();
-
-            Iterator<JsonValue> colIt = columnsToMatch.iterator();
-            while (colIt.hasNext()) {
-                JsonObject colDef = (JsonObject) colIt.next();
-                columnsArrays.add(Json.createObjectBuilder().add("text", colDef.getString("display")).add("type", colDef.getString("type")).build());
-            }
-
-            JsonObject columns = Json.createObjectBuilder().add("columns", columnsArrays.build()).add("rows", rowBuilder.build()).add("type", "table").build();
-            baseArray.add(columns);
-
-            out.print(baseArray.build());
-            out.flush();
         }
     }
 
