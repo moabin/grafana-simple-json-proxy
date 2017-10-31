@@ -1,0 +1,33 @@
+[{
+	"text": "apptType",
+        "display": "Appt Type",
+	"type": "string"
+}, {
+	"text": "startDateTime",
+        "display": "Start Date",
+	"type": "date"
+}, {
+	"text": "hjSentAsnOut",
+        "display": "HJ Sent ASN Out",
+	"type": "string"
+}, {
+	"text": "hospAsnOutMsg",
+        "display": "Hosp ASN Out Msg",
+	"type": "string"
+}, {
+	"text": "rwHasAsnOut",
+        "display": "RW ASN Out?",
+	"type": "string"
+}, {
+	"text": "rwSentAsnOut",
+        "display": "RW Sent ASN Out",
+	"type": "string"
+}, {
+	"text": "hospAsnOutError",
+        "display": "Hosp ASN Out Err",
+	"type": "string"
+}, {
+	"text": "apptCode",
+        "display": "Appt Code",
+	"type": "string"
+}]

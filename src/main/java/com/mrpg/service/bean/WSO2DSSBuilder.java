@@ -20,16 +20,17 @@ import javax.json.JsonValue;
  *
  * @author Monyo
  */
-public class ReceivingViolationsNextDay implements JsonBuilder{
+public class WSO2DSSBuilder implements JsonBuilder{
 
     @Override
-    public String build() throws IOException {
+    public String build(String type) throws IOException {
         HashMap headers = new HashMap();
         headers.put("Accept", "application/json");
-        JsonObject jsonReponse = Json.createReader(Util.doGetStream(Util.getProperties("default").getProperty("ReceivingViolationsNextDay.URL"), headers)).readObject();
+        JsonObject jsonReponse = Json.createReader(Util.doGetStream(Util.getProperties("default").getProperty(type + ".URL"), headers)).readObject();
 
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
-        InputStream is = loader.getResourceAsStream(Util.getProperties("default").getProperty("columns.json"));
+        
+        InputStream is = loader.getResourceAsStream(Util.getProperties("default").getProperty(type + "_columns"));
         JsonArray columnsToMatch = Json.createReader(is).readArray();
         //System.out.println(columnsToMatch);
 

@@ -6,6 +6,7 @@
 package com.mrpg.service;
 
 import com.mrpg.service.bean.JsonBuilder;
+import com.mrpg.service.bean.WSO2DSSBuilder;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -58,15 +59,9 @@ public class QueryServlet extends HttpServlet {
 
             LOG.debug("target = " + target);
 
-            try {
-                Class targetClass = Class.forName("com.mrpg.service.bean" + target);
-                JsonBuilder builder = (JsonBuilder) targetClass.newInstance();
-
-                out.print(builder.build());
-                out.flush();
-            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
-                java.util.logging.Logger.getLogger(QueryServlet.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-            }
+            JsonBuilder builder = new WSO2DSSBuilder();
+            out.print(builder.build(target));
+            out.flush();
         }
     }
 

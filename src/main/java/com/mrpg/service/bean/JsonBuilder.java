@@ -13,6 +13,6 @@ import java.io.IOException;
  */
 public interface JsonBuilder {
     
-    public String build() throws IOException;
+    public String build(String type) throws IOException;
     
 }
