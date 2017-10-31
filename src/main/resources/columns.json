@@ -1,0 +1,45 @@
+[{
+	"text": "hospAsnMsg",
+        "display": "Hosiptal ASN",
+	"type": "number"
+}, {
+	"text": "rwASNMsg",
+        "display": "Redworld ASN",
+	"type": "string"
+}, {
+	"text": "hjPoMsg",
+        "display": "HighJump PO Msg",
+	"type": "string"
+}, {
+	"text": "hjAsnMsg",
+        "display": "Highjump ASN",
+	"type": "string"
+}, {
+	"text": "horizon",
+        "display": "Horizon",
+	"type": "string"
+}, {
+	"text": "hjApptMsg",
+        "display": "Highjump Appointment",
+	"type": "string"
+}, {
+	"text": "hospAsnError",
+        "display": "Hosiptal ASN Error",
+	"type": "string"
+}, {
+	"text": "hjAllocMsg",
+        "display": "Highjump Allocation",
+	"type": "string"
+}, {
+	"text": "hjHasAsnIn",
+        "display": "Highjump ASN In?",
+	"type": "string"
+}, {
+	"text": "hospPoError",
+        "display": "Hosiptal PO Error",
+	"type": "string"
+}, {
+	"text": "hjHasAlloc",
+        "display": "Highjump Allocation?",
+	"type": "string"
+}]

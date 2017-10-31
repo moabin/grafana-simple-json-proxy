@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+    <session-config>
+        <session-timeout>
+           -1
+        </session-timeout>
+    </session-config>
+    <context-param>
+        <param-name>routeBuilder-MyRoute</param-name>
+        <param-value>com.mrpg.service.MyRouteBuilder</param-value>
+    </context-param>
+    <context-param>
+        <param-name>CamelContextLifecycle</param-name>
+        <param-value>com.mrpg.service.JNDIService</param-value>
+    </context-param>
+    <!-- the listener that kick-starts Camel -->
+    <listener>
+        <listener-class>org.apache.camel.component.servletlistener.JndiCamelServletContextListener</listener-class>
+    </listener>
+    <!-- Camel servlet used in the Camel application -->
+    <servlet>
+        <servlet-name>CamelServlet</servlet-name>
+        <servlet-class>org.apache.camel.component.servlet.CamelHttpTransportServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <!-- Camel servlet mapping -->
+    <servlet-mapping>
+        <servlet-name>CamelServlet</servlet-name>
+        <url-pattern>/camel/*</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>CamelBaseServlet</servlet-name>
+        <servlet-class>com.mrpg.service.BaseServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CamelBaseServlet</servlet-name>
+        <url-pattern>/camel/</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>BaseServlet</servlet-name>
+        <servlet-class>com.mrpg.service.BaseServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>BaseServlet</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>SearchServlet</servlet-name>
+        <servlet-class>com.mrpg.service.SearchServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SearchServlet</servlet-name>
+        <url-pattern>/search</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>QueryServlet</servlet-name>
+        <servlet-class>com.mrpg.service.QueryServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>QueryServlet</servlet-name>
+        <url-pattern>/query</url-pattern>
+    </servlet-mapping>
+    
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+</web-app>
