@@ -50,7 +50,7 @@ public class Util {
         try {
             //ClassLoader loader = Thread.currentThread().getContextClassLoader();
             File f = new File("/opt/" + prop + ".properties");
-            LOG.debug("file = " + f.getAbsolutePath());
+            LOG.info("file = " + f.getAbsolutePath());
             is = new FileInputStream(f);
             //is = loader.getResourceAsStream("/opt/" + prop + ".properties");
             properties.load(is);
