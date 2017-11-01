@@ -50,14 +50,14 @@ public class QueryServlet extends HttpServlet {
         response.setHeader("Access-Control-Allow-Methods", "GET,PUT,POST,HEAD,OPTIONS");
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Content-Type", "application/json; charset=utf-8");
-
+        LOG.info("calling QueryServlet");
         try (PrintWriter out = response.getWriter()) {
-
+            LOG.info("reading POST data");
             JsonObject requestJson = Json.createReader(request.getInputStream()).readObject();
             JsonArray targets = requestJson.getJsonArray("targets");
             String target = targets.getJsonObject(0).getString("target");
 
-            LOG.debug("target = " + target);
+            LOG.info("target = " + target);
 
             JsonBuilder builder = new WSO2DSSBuilder();
             out.print(builder.build(target));
