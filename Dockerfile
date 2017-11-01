@@ -1,7 +1,7 @@
 FROM dchq/tomcat
 MAINTAINER moabin <moabin@gmail.com>
 
-RUN apk update && apk upgrade && apk --update add curl && rm -rf /tmp/* /var/cache/apk/*
+
 
 ENV VERSION 1.0
 ENV WAR grafana-simple-json-proxy-$VERSION.war
