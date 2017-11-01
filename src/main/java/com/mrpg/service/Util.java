@@ -6,6 +6,8 @@
 package com.mrpg.service;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -46,8 +48,11 @@ public class Util {
         final Properties properties = new Properties();
         InputStream is = null;
         try {
-            ClassLoader loader = Thread.currentThread().getContextClassLoader();
-            is = loader.getResourceAsStream(prop + ".properties");
+            //ClassLoader loader = Thread.currentThread().getContextClassLoader();
+            File f = new File("/opt/" + prop + ".properties");
+            LOG.debug("file = " + f.getAbsolutePath());
+            is = new FileInputStream(f);
+            //is = loader.getResourceAsStream("/opt/" + prop + ".properties");
             properties.load(is);
         } catch (IOException ex) {
             LOG.error(ex.getMessage(), ex);
