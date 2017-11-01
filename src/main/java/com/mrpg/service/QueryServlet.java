@@ -62,6 +62,8 @@ public class QueryServlet extends HttpServlet {
             JsonBuilder builder = new WSO2DSSBuilder();
             out.print(builder.build(target));
             out.flush();
+        } catch (Exception ex) {
+            LOG.error(ex.getMessage(), ex);
         }
     }
 

@@ -275,6 +275,7 @@ public class Util {
      */
     public static InputStream doGetStream(String uri, HashMap headers) throws MalformedURLException, IOException {
         
+        LOG.info("calling URL: " + uri);
         URL url = new URL(uri);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 

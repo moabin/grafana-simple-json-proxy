@@ -6,6 +6,8 @@
 package com.mrpg.service.bean;
 
 import com.mrpg.service.Util;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -15,22 +17,29 @@ import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonValue;
+import org.apache.log4j.Logger;
 
 /**
  *
  * @author Monyo
  */
-public class WSO2DSSBuilder implements JsonBuilder{
+public class WSO2DSSBuilder implements JsonBuilder {
+
+    private static final Logger LOG = Logger.getLogger("WSO2DSSBuilder");
 
     @Override
     public String build(String type) throws IOException {
         HashMap headers = new HashMap();
         headers.put("Accept", "application/json");
+        LOG.info("type = " + type);
+        LOG.info("Using URL: " + Util.getProperties("default").getProperty(type + ".URL"));
         JsonObject jsonReponse = Json.createReader(Util.doGetStream(Util.getProperties("default").getProperty(type + ".URL"), headers)).readObject();
 
-        ClassLoader loader = Thread.currentThread().getContextClassLoader();
-        
-        InputStream is = loader.getResourceAsStream(Util.getProperties("default").getProperty(type + "_columns"));
+        //ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        //InputStream is = loader.getResourceAsStream(Util.getProperties("default").getProperty(type + "_columns"));
+        File f = new File("/opt/" + Util.getProperties("default").getProperty(type + "_columns"));
+        LOG.info("file = " + f.getAbsolutePath());
+        InputStream is = new FileInputStream(f);
         JsonArray columnsToMatch = Json.createReader(is).readArray();
         //System.out.println(columnsToMatch);
 
