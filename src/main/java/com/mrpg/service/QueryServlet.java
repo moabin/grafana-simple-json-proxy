@@ -59,9 +59,20 @@ public class QueryServlet extends HttpServlet {
 
             LOG.info("target = " + target);
 
-            JsonBuilder builder = new WSO2DSSBuilder();
-            out.print(builder.build(target));
-            out.flush();
+            //JsonBuilder builder = new WSO2DSSBuilder();
+            
+            try {
+                Class targetClass = Class.forName("com.mrpg.service.bean." + target);
+                JsonBuilder builder = (JsonBuilder) targetClass.newInstance();
+
+                out.print(builder.build(target));
+                out.flush();
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
+                java.util.logging.Logger.getLogger(QueryServlet.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+            }
+            
+//            out.print(builder.build(target));
+//            out.flush();
         } catch (Exception ex) {
             LOG.error(ex.getMessage(), ex);
         }

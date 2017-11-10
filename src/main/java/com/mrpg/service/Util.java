@@ -50,6 +50,7 @@ public class Util {
         try {
             //ClassLoader loader = Thread.currentThread().getContextClassLoader();
             File f = new File("/opt/" + prop + ".properties");
+            //File f = new File("C:\\Shared\\OneDrive - Mr Price Group Ltd\\MrP\\Queue Monitoring\\docker\\json-proxy\\" + prop + ".properties");
             LOG.info("file = " + f.getAbsolutePath());
             is = new FileInputStream(f);
             //is = loader.getResourceAsStream("/opt/" + prop + ".properties");
