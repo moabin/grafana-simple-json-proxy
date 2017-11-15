@@ -31,11 +31,14 @@ import javax.net.ssl.X509TrustManager;
 import org.apache.log4j.Logger;
 
 /**
- *
+ * Utility methods
  * @author Monyo
  */
 public class Util {
 
+    /**
+     * Logger.
+     */
     private static final Logger LOG = Logger.getLogger("Util");
 
     /**

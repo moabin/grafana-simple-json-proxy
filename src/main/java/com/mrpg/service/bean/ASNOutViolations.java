@@ -6,9 +6,10 @@
 package com.mrpg.service.bean;
 
 /**
+ * Extends base WSO2DSSBuilder but class name needed for instantiation.
  *
  * @author Monyo
  */
-public class ASNOutViolations extends WSO2DSSBuilder{
-    
+public class ASNOutViolations extends WSO2DSSBuilder {
+
 }

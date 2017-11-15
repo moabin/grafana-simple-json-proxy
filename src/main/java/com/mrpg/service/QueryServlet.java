@@ -6,20 +6,12 @@
 package com.mrpg.service;
 
 import com.mrpg.service.bean.JsonBuilder;
-import com.mrpg.service.bean.WSO2DSSBuilder;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
-import java.io.StringReader;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.logging.Level;
 import javax.json.Json;
 import javax.json.JsonArray;
-import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
-import javax.json.JsonReader;
-import javax.json.JsonValue;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -28,11 +20,14 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 /**
- *
+ * Reponds to query request from grafana
  * @author monyo
  */
 public class QueryServlet extends HttpServlet {
 
+    /**
+     * Logger.
+     */
     private static final Logger LOG = Logger.getLogger("QueryServlet");
 
     /**
@@ -46,22 +41,26 @@ public class QueryServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        //Add XSS bypass headers
         response.setHeader("Access-Control-Allow-Headers", "accept, content-type");
         response.setHeader("Access-Control-Allow-Methods", "GET,PUT,POST,HEAD,OPTIONS");
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Content-Type", "application/json; charset=utf-8");
-        LOG.info("calling QueryServlet");
+        
+        LOG.debug("calling QueryServlet");
         try (PrintWriter out = response.getWriter()) {
-            LOG.info("reading POST data");
+            LOG.debug("reading POST data");
+            //get and parse JSON data posted to the service
             JsonObject requestJson = Json.createReader(request.getInputStream()).readObject();
             JsonArray targets = requestJson.getJsonArray("targets");
             String target = targets.getJsonObject(0).getString("target");
-
-            LOG.info("target = " + target);
-
-            //JsonBuilder builder = new WSO2DSSBuilder();
             
+            //target is one of string in jsonarray defined in default.properties under search.patterns 
+            //the targets are presented in SearchSerlet to grafana
+            LOG.debug("target = " + target);
+
             try {
+                //create object of the target type in com.mrpg.service.bean package
                 Class targetClass = Class.forName("com.mrpg.service.bean." + target);
                 JsonBuilder builder = (JsonBuilder) targetClass.newInstance();
 
@@ -70,16 +69,22 @@ public class QueryServlet extends HttpServlet {
             } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
                 java.util.logging.Logger.getLogger(QueryServlet.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
             }
-            
-//            out.print(builder.build(target));
-//            out.flush();
+
         } catch (Exception ex) {
             LOG.error(ex.getMessage(), ex);
         }
     }
 
+    /**
+     * Handle OPTION call; called before the POST or GET by grafana to make sure the context exists
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException 
+     */
     @Override
     protected void doOptions(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //called before the POST or GET by grafana to make sure the context exists
         response.setHeader("Access-Control-Allow-Headers", "accept, content-type");
         response.setHeader("Access-Control-Allow-Methods", "GET,PUT,POST,HEAD,OPTIONS");
         response.setHeader("Access-Control-Allow-Origin", "*");

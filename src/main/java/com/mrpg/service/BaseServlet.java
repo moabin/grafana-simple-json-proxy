@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  *
  * @author monyo
+ *
  */
 public class BaseServlet extends HttpServlet {
 
@@ -29,13 +30,14 @@ public class BaseServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        //Add header for Cross site scripting for Grafana "direct" daasource calls
         response.setHeader("Access-Control-Allow-Headers", "accept, content-type");
         response.setHeader("Access-Control-Allow-Methods", "GET,PUT,POST,HEAD,OPTIONS");
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Content-Type", "application/json; charset=utf-8");
         try (PrintWriter out = response.getWriter()) {
+            //Respond to basic availability check from Grafana, senidn gback empty JSON but likely not necessary
             out.println("{}");
-            System.out.println("Base called");
         }
     }
 

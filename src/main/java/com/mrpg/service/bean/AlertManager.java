@@ -6,10 +6,7 @@
 package com.mrpg.service.bean;
 
 import com.mrpg.service.Util;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import javax.json.Json;
@@ -20,27 +17,45 @@ import javax.json.JsonValue;
 import org.apache.log4j.Logger;
 
 /**
- *
+ * Handle AlertManager target
+ * Calls Prometheus AlertManager API to retrieve active alerts
  * @author Monyo
  */
 public class AlertManager implements JsonBuilder {
 
+    /**
+     * Logger.
+     */
     private static final Logger LOG = Logger.getLogger("AlertManager");
 
+    /**
+     * Build response table.
+     * @param type Target type
+     * @return JSON response
+     * @throws java.io.IOException
+     */
     @Override
-    public String build(String type) throws IOException {
+    public String build(final String type) throws IOException {
         HashMap headers = new HashMap();
         headers.put("Accept", "application/json, text/plain, */*");
-        LOG.info("Using URL: " + Util.getProperties("default").getProperty(type + ".URL"));
-        JsonObject jsonReponse = Json.createReader(Util.doGetStream(Util.getProperties("default").getProperty(type + ".URL"), headers)).readObject();
+        LOG.debug("Using URL: " + Util.getProperties("default").getProperty(type + ".URL"));
+        JsonObject jsonReponse = 
+                Json.createReader(Util.doGetStream(Util.getProperties("default").getProperty(type + ".URL"), headers))
+                        .readObject();
 
+        //Following is built from all possible vlues in the reposne from alert manager
+        //A table of columns and rows in Json is created
+        //Only alertname, severity, and startsAt are added to the rows
+        
         String status = jsonReponse.getString("status");
 
         JsonArray dataArr = jsonReponse.getJsonArray("data");
         Iterator<JsonValue> it = dataArr.iterator();
 
+        //represents the rows in the table
         JsonArrayBuilder rowBuilder = Json.createArrayBuilder();
-        
+
+        //for each alert get the data
         while (it.hasNext()) {
             JsonValue value = it.next();
             JsonObject data = (JsonObject) value;
@@ -53,11 +68,12 @@ public class AlertManager implements JsonBuilder {
             String job = labels.getString("job");
             String monitor = labels.getString("monitor");
             //String outboundmessageclasscode = labels.getString("outboundmessageclasscode");
-            
-            String severity  = "";
-            try{
-            severity = labels.getString("severity");
-            }catch (NullPointerException npe){}
+
+            String severity = "";
+            try {
+                severity = labels.getString("severity");
+            } catch (NullPointerException npe) {
+            }
 
             JsonObject annotations = data.getJsonObject("annotations");
 
@@ -85,25 +101,29 @@ public class AlertManager implements JsonBuilder {
 
             JsonArray receivers = data.getJsonArray("receivers");
             String fingerprint = data.getString("fingerprint");
-            
+
             JsonArrayBuilder row = Json.createArrayBuilder();
-            
+
+            //add row with just the columns we need
             row.add(alertname);
             row.add(severity);
             row.add(startsAt);
-            
+
             rowBuilder.add(row.build());
         }
 
         JsonArrayBuilder baseArray = Json.createArrayBuilder();
+        
+        //representes the columns in the table
         JsonArrayBuilder columnsArrays = Json.createArrayBuilder();
-
+        //add the column by specifiying the text, and type
         columnsArrays.add(Json.createObjectBuilder().add("text", "AlertName").add("type", "string").build());
         columnsArrays.add(Json.createObjectBuilder().add("text", "Severity").add("type", "string").build());
         columnsArrays.add(Json.createObjectBuilder().add("text", "Time").add("type", "date").build());
-        
-        JsonObject columns = Json.createObjectBuilder().add("columns", columnsArrays.build()).add("rows", rowBuilder.build()).add("type", "table").build();
-        baseArray.add(columns);
+
+        //build the table by adding columns and row arrays
+        JsonObject table = Json.createObjectBuilder().add("columns", columnsArrays.build()).add("rows", rowBuilder.build()).add("type", "table").build();
+        baseArray.add(table);
 
         return baseArray.build().toString();
     }

@@ -7,7 +7,7 @@ import org.apache.camel.model.rest.RestBindingMode;
 
 /**
  * Java DSL camel routes
- *
+ * Depricated in favour of normal servlets, too much time spent on XSS bypass
  */
 public class MyRouteBuilder extends RouteBuilder {
 
@@ -24,32 +24,23 @@ public class MyRouteBuilder extends RouteBuilder {
             .bindingMode(RestBindingMode.json)
             .dataFormatProperty("prettyPrint", "true");
             
-//            response.setHeader("Access-Control-Allow-Headers", "accept, content-type");
-//            response.setHeader("Access-Control-Allow-Methods", "GET,PUT,POST,HEAD,OPTIONS");
-//            response.setHeader("Access-Control-Allow-Origin", "*");
-//            response.setHeader("Content-Type", "application/json; charset=utf-8");
-            
             from("servlet:annotations")
                     .setHeader("Access-Control-Allow-Headers", new SimpleExpression("accept, content-type"))
                     .setHeader("Access-Control-Allow-Methods", new SimpleExpression("GET,PUT,POST,HEAD,OPTIONS"))
                     .setHeader("Access-Control-Allow-Origin", new SimpleExpression("*"))
                     .to("bean:echoBean?method=echo");
                     
-                    //.setHeader("Content-Type", new SimpleExpression("application/json; charset=utf-8"));
-
             from("servlet:query")
                     .setHeader("Access-Control-Allow-Headers", new SimpleExpression("accept, content-type"))
                     .setHeader("Access-Control-Allow-Methods", new SimpleExpression("GET,PUT,POST,HEAD,OPTIONS"))
                     .setHeader("Access-Control-Allow-Origin", new SimpleExpression("*"))
                     .to("bean:echoBean?method=query");
-                    //.setHeader("Content-Type", new SimpleExpression("application/json; charset=utf-8"));
             
             from("servlet:search")
                     .setHeader("Access-Control-Allow-Headers", new SimpleExpression("accept, content-type"))
                     .setHeader("Access-Control-Allow-Methods", new SimpleExpression("GET,PUT,POST,HEAD,OPTIONS"))
                     .setHeader("Access-Control-Allow-Origin", new SimpleExpression("*"))
                     .to("bean:echoBean?method=search");
-                    //.setHeader("Content-Type", new SimpleExpression("application/json; charset=utf-8"));
 
         } catch (Exception ex) {
             LOG.error(ex.getMessage(), ex);

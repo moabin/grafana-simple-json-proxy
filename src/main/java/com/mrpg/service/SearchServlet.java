@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
 public class SearchServlet extends HttpServlet {
 
     private static final Logger LOG = Logger.getLogger("SearchServlet");
-    
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -32,15 +32,15 @@ public class SearchServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        //Add XSS bypass headers
         response.setContentType("application/json; charset=utf-8");
         response.setHeader("Access-Control-Allow-Headers", "accept, content-type");
         response.setHeader("Access-Control-Allow-Methods", "GET,PUT,POST,HEAD,OPTIONS");
         response.setHeader("Access-Control-Allow-Origin", "*");
         try (PrintWriter out = response.getWriter()) {
-            //out.println("Ok");
-            System.out.println("Search called");
-            //String data = "[\"upper_25\",\"upper_50\",\"upper_75\",\"upper_90\",\"upper_95\"]";
-            //String data = "[\"ReceivingViolationsNextDay\",\"ASNOutViolations\"]";
+            //Returns the JsonArray defined in default.properties under search.patterns 
+            //Grafana will first "search" for targets to then "query" against
+            //To add more targets extend the JsonBuilder interface and add the class name to search.patterns array
             String data = Util.getProperties("default").getProperty("search.patterns");
             out.print(data);
             out.flush();

@@ -20,7 +20,11 @@ import javax.json.JsonValue;
 import org.apache.log4j.Logger;
 
 /**
- *
+ * WSO2 DSS web-services are common
+ * To add a DSS service add the URL and target name to default.properties
+ * Add a class with target name and extend this class
+ * Add a json file with the column you want to use as <classname>_columns.json
+ * Add volume entry for this json file to docker-compose file pointing to /opt/<json file name>
  * @author Monyo
  */
 public class WSO2DSSBuilder implements JsonBuilder {
