@@ -1,0 +1,17 @@
+[{
+    "text": "Plant",
+    "type": "string"
+},
+{
+    "text": "Material Count",
+    "type": "number"
+},
+{
+    "text": "SumOfQuantity",
+    "type": "number"
+},
+{
+    "text": "SumOfAmtin",
+    "type": "number"
+}
+]

@@ -64,7 +64,9 @@ public class QueryServlet extends HttpServlet {
                 Class targetClass = Class.forName("com.mrpg.service.bean." + target);
                 JsonBuilder builder = (JsonBuilder) targetClass.newInstance();
 
-                out.print(builder.build(target));
+                String output = builder.build(target);
+                LOG.info(output);
+                out.print(output);
                 out.flush();
             } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
                 java.util.logging.Logger.getLogger(QueryServlet.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);

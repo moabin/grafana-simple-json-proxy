@@ -22,6 +22,8 @@ import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Properties;
+import java.util.Random;
+
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -51,12 +53,12 @@ public class Util {
         final Properties properties = new Properties();
         InputStream is = null;
         try {
-            //ClassLoader loader = Thread.currentThread().getContextClassLoader();
-            File f = new File("/opt/" + prop + ".properties");
+            ClassLoader loader = Thread.currentThread().getContextClassLoader();
+            //File f = new File("/opt/" + prop + ".properties");
             //File f = new File("C:\\Shared\\OneDrive - Mr Price Group Ltd\\MrP\\Queue Monitoring\\docker\\json-proxy\\" + prop + ".properties");
-            LOG.info("file = " + f.getAbsolutePath());
-            is = new FileInputStream(f);
-            //is = loader.getResourceAsStream("/opt/" + prop + ".properties");
+            //LOG.info("file = " + f.getAbsolutePath());
+            //is = new FileInputStream(f);
+            is = loader.getResourceAsStream(prop + ".properties");
             properties.load(is);
         } catch (IOException ex) {
             LOG.error(ex.getMessage(), ex);
@@ -298,6 +300,22 @@ public class Util {
         } catch (IOException ex) {
             return ((HttpURLConnection) connection).getErrorStream();
         }
+    }
+
+    public BufferedReader getFile(String location){
+        LOG.info("/resources/" + location);
+        InputStream is = getClass().getClassLoader().getResourceAsStream(location);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is ));
+
+        return reader;
+    }
+
+    private static Random ran = new Random();
+    
+    public static int random(){
+        
+            int x = ran.nextInt(10);
+            return x;
     }
 
 }

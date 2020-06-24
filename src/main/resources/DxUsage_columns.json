@@ -1,0 +1,26 @@
+[{
+    "text": "Time",
+    "type": "time"
+},
+{
+    "text": "Material",
+    "type": "number"
+},
+{
+    "text": "Bela-Bela",
+    "type": "number"
+}
+,
+{
+    "text": "Brackenfell",
+    "type": "number"
+},
+{
+    "text": "Empangeni",
+    "type": "number"
+},
+{
+    "text": "George",
+    "type": "number"
+}
+]
